@@ -8,8 +8,12 @@ class UserController {
         const user = ctx.request.body 
         console.log(user, 'user')
         const res = await userService.create(user)
-        console.log(res)
+        // console.log(res)
         ctx.body = res 
+    }
+
+    async login(ctx, next) {
+        ctx.body = '登录成功'
     }
 }
 
