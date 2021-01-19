@@ -1,7 +1,9 @@
-const { Layer } = require('koa-router')
+const jwt = require('jsonwebtoken')
+
 const errorTypes = require('../constants/error-types')
 const userService = require('../service/user.service')
 const md5 = require('../util/encryptPassword')
+const { PUBLIC_KEY } = require('../app/config')
 
 const verifyUser = async (ctx, next) => {
     // 获取用户信息
@@ -46,6 +48,8 @@ const verifyLogin = async (ctx, next) => {
         const error = new Error(errorTypes.PASSWORD_INCORRECT)
         return ctx.app.emit('error', error, ctx)
     }
+    // 传递user信息
+    ctx.user = user 
 
     await next()
 }
@@ -57,4 +61,24 @@ const encyptPassword = async (ctx, next) => {
     await next()
 }
 
-module.exports = { verifyUser, verifyLogin, encyptPassword }
+const verifyToken = async (ctx, next) => {
+    console.log('验证授权登录middleware执行')
+    let token = ctx.headers.authorization
+    console.log(ctx.headers)
+    console.log(token, 'token')
+    try {
+        const result = jwt.verify(token, PUBLIC_KEY, {
+            algorithms: ['RS256']
+        })
+
+        ctx.user = result 
+        await next()
+    } catch (err) {
+        const error = new Error(errorTypes.NEED_LOGIN)
+        ctx.app.emit('error', error, ctx)
+    }
+
+
+}
+
+module.exports = { verifyUser, verifyLogin, encyptPassword, verifyToken}

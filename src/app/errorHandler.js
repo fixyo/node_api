@@ -14,6 +14,10 @@ module.exports = (error, ctx) => {
             status = 400 // 参数错误
             message = '用户不存在'
             break;
+        case errorTypes.NEED_LOGIN:
+            status = 401 // 未授权
+            message = '无效token'
+            break;
         case errorTypes.PASSWORD_INCORRECT:
             status = 400
             message = '密码错误'

@@ -1,0 +1,2 @@
+- openssl
+- genrsa -out private.key 1024 
