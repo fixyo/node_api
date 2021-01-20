@@ -65,7 +65,6 @@ const verifyToken = async (ctx, next) => {
     console.log('验证授权登录middleware执行')
     let token = ctx.headers.authorization
     console.log(ctx.headers)
-    console.log(token, 'token')
     try {
         const result = jwt.verify(token, PUBLIC_KEY, {
             algorithms: ['RS256']
@@ -73,7 +72,9 @@ const verifyToken = async (ctx, next) => {
 
         ctx.user = result 
         await next()
+        
     } catch (err) {
+        
         const error = new Error(errorTypes.NEED_LOGIN)
         ctx.app.emit('error', error, ctx)
     }
