@@ -18,6 +18,10 @@ module.exports = (error, ctx) => {
             status = 401 // 未授权
             message = '无效token'
             break;
+        case errorTypes.HAS_NO_PERMISSION:
+            status = 403 // 未授权
+            message = '用户无权限'
+            break;
         case errorTypes.PASSWORD_INCORRECT:
             status = 400
             message = '密码错误'

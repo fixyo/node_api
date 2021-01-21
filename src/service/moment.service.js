@@ -36,6 +36,27 @@ class MomentService {
 
         return result[0] 
     }
+
+    async updateMoment(momentId, content) {
+        try {
+            const sql = `UPDATE moment SET content = ? WHERE id = ?;`
+            const [result] = await db.execute(sql, [content, momentId])
+            // console.log(result, 'result')
+            return result 
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    async removeMoment(momentId) {
+        try {
+            const sql = `DELETE FROM moment WHERE id = ?;`
+            const [ result ] = await db.execute(sql, [momentId])
+            return result 
+        } catch (err) {
+            console.error(err)
+        }
+    }
 }
 
 module.exports = new MomentService()

@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const errorTypes = require('../constants/error-types')
 const userService = require('../service/user.service')
+const authService = require('../service/auth.service')
 const md5 = require('../util/encryptPassword')
 const { PUBLIC_KEY } = require('../app/config')
 
@@ -82,4 +83,19 @@ const verifyToken = async (ctx, next) => {
 
 }
 
-module.exports = { verifyUser, verifyLogin, encyptPassword, verifyToken}
+const verifyPermission = async (ctx, next) => {
+    // 当前用户的id
+    const { id } = ctx.user 
+    const { momentId } = ctx.params
+    try {
+        const hasPermission = await authService.checkMomentPermission(momentId, id)
+        if (!hasPermission) throw new Error()
+        await next()
+    } catch (err) {
+        const error = new Error(errorTypes.HAS_NO_PERMISSION)
+        ctx.app.emit('error', error, ctx)
+    }
+
+}
+
+module.exports = { verifyUser, verifyLogin, encyptPassword, verifyToken, verifyPermission}
