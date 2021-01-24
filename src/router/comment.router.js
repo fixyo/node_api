@@ -1,10 +1,13 @@
 const Router = require('koa-router')
-const { verifyToken, verifyUser } = require('../middleware/user.middleware')
-const { create, reply } = require('../controller/comment.controller')
+const { verifyToken, verifyPermission } = require('../middleware/user.middleware')
+const { create, reply, update, remove } = require('../controller/comment.controller')
 
 const router = new Router({ prefix: '/comment'})
 
 router.post('/', verifyToken, create)
 router.post('/reply', verifyToken, reply)
+
+router.patch('/:commentId', verifyToken, verifyPermission('comment', 'commentId'), update)
+router.delete('/:commentId', verifyToken, verifyPermission('comment', 'commentId'), remove)
 
 module.exports = router

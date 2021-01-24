@@ -14,6 +14,27 @@ class CommentService {
         }
         
     }
+
+    async update(commentId, content) {
+        try {
+            const sql = `UPDATE comment SET content = ? WHERE id = ?;`
+            const [ result ] = await db.execute(sql, [content, commentId])
+            return result
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    async remove(commentId) {
+        try {
+            const sql = `DELETE FROM comment WHERE id = ?;`
+            const [ result ] = await db.execute(sql, [commentId])
+            
+            return result
+        } catch(err) {
+            console.error(err)
+        }
+    }
 }
 
 module.exports = new CommentService()

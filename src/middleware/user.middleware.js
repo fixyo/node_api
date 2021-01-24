@@ -83,19 +83,23 @@ const verifyToken = async (ctx, next) => {
 
 }
 
-const verifyPermission = async (ctx, next) => {
-    // 当前用户的id
-    const { id } = ctx.user 
-    const { momentId } = ctx.params
-    try {
-        const hasPermission = await authService.checkMomentPermission(momentId, id)
-        if (!hasPermission) throw new Error()
-        await next()
-    } catch (err) {
-        const error = new Error(errorTypes.HAS_NO_PERMISSION)
-        ctx.app.emit('error', error, ctx)
+const verifyPermission = (tableName, key) => {
+    return async (ctx, next) => {
+        // 当前用户的id
+        const userId = ctx.user.id
+        const id = ctx.params[key]
+        try {
+            const hasPermission = await authService.checkPermission(tableName, id, userId)
+            if (!hasPermission) throw new Error()
+            await next()
+        } catch (err) {
+            const error = new Error(errorTypes.HAS_NO_PERMISSION)
+            ctx.app.emit('error', error, ctx)
+        }
+    
     }
-
 }
+
+
 
 module.exports = { verifyUser, verifyLogin, encyptPassword, verifyToken, verifyPermission}
