@@ -13,9 +13,10 @@ class MomentService {
         const sql = `
             SELECT 
                 m.id AS id, m.content AS content, m.createAt AS createTime, m.updateAt AS updateTime, 
-                JSON_OBJECT('id', u.id, 'username', u.name) user 
+                JSON_OBJECT('id', u.id, 'username', u.name) user,
+                (SELECT COUNT(*) FROM comment AS c WHERE c.moment_id = m.id) commentCount
             FROM moment AS m
-            LEFT JOIN users AS u ON m.userid = u.id
+            LEFT JOIN users AS u ON m.user_id = u.id
             LIMIT ?, ?;
         `
         const [ result ] = await db.execute(sql, [offset, size])
@@ -29,7 +30,7 @@ class MomentService {
                 m.id AS id, m.content AS content, m.createAt AS createTime, m.updateAt AS updateTime, 
                 JSON_OBJECT('id', u.id, 'username', u.name) user 
             FROM moment AS m
-            LEFT JOIN users AS u ON m.userid = u.id
+            LEFT JOIN users AS u ON m.user_id = u.id
             WHERE m.id = ?;
         `
         const [ result ] = await db.execute(sql, [id])

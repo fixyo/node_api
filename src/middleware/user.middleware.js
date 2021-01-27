@@ -65,7 +65,7 @@ const encyptPassword = async (ctx, next) => {
 const verifyToken = async (ctx, next) => {
     console.log('验证授权登录middleware执行')
     let token = ctx.headers.authorization
-    console.log(ctx.headers)
+    // console.log(ctx.headers)
     try {
         const result = jwt.verify(token, PUBLIC_KEY, {
             algorithms: ['RS256']
