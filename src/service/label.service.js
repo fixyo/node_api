@@ -10,6 +10,17 @@ class LabelService {
             console.error(err)
         }
     }
+
+    async getLabelByName(name) {
+        try {
+            const sql = `SELECT * FROM label WHERE name = ?`
+            const [result] = await db.execute(sql, [name])
+
+            return result[0]
+        } catch (err) {
+            console.error(err)
+        }
+    }
 }
 
 module.exports = new LabelService()

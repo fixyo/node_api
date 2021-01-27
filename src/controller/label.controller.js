@@ -7,6 +7,8 @@ class LabelController {
         const result = await create(name)
         ctx.body = result
     }
+
+  
 }
 
 module.exports = new LabelController()

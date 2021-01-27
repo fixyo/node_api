@@ -58,6 +58,26 @@ class MomentService {
             console.error(err)
         }
     }
+
+    async isLabelExistsAlready(momentId, labelId) {
+        try {
+            const sql = `SELECT * FROM moment_label WHERE moment_id = ? AND label_id = ?;`
+            const [result] = await db.execute(sql, [momentId, labelId])
+            return result[0] ? true : false 
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    async addLabel(momentId, labelId) {
+        try {
+            const sql = `INSERT INTO moment_label(moment_id, label_id) VALUES(?, ?);`
+            const [result] = await db.execute(sql, [momentId, labelId])
+            return result
+        } catch (err) {
+            console.error(err)
+        }
+    }
 }
 
 module.exports = new MomentService()

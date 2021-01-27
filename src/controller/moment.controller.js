@@ -1,4 +1,4 @@
-const { create, getMomentById, getMomentList, updateMoment, removeMoment } = require('../service/moment.service')
+const { create, getMomentById, getMomentList, updateMoment, removeMoment, isLabelExistsAlready, addLabel } = require('../service/moment.service')
 class MomentController {
     async create(ctx, next) {
         const { id } = ctx.user 
@@ -37,6 +37,23 @@ class MomentController {
             const { momentId } = ctx.params
             const res = await removeMoment(momentId)
             ctx.body = res 
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    async addLabels(ctx, next) {
+        const { labels } = ctx
+        const { momentId } = ctx.params 
+        
+        try {
+            for (let label of labels) {
+                const isExist = await isLabelExistsAlready(momentId, label.id)
+                if (!isExist) {
+                    await await addLabel(momentId, label.id)
+                } 
+            }
+            ctx.body = 'add label to moment successfully'
         } catch (err) {
             console.error(err)
         }
