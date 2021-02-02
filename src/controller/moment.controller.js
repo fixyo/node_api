@@ -1,4 +1,17 @@
-const { create, getMomentById, getMomentList, updateMoment, removeMoment, isLabelExistsAlready, addLabel } = require('../service/moment.service')
+const fs = require('fs')
+const { 
+    create, 
+    getMomentById, 
+    getMomentList, 
+    updateMoment, 
+    removeMoment, 
+    isLabelExistsAlready, 
+    addLabel,
+    
+} = require('../service/moment.service')
+
+const { getPictureByFilename } = require('../service/file.service')
+
 class MomentController {
     async create(ctx, next) {
         const { id } = ctx.user 
@@ -57,6 +70,14 @@ class MomentController {
         } catch (err) {
             console.error(err)
         }
+    }
+
+    async getPictureByFilename(ctx, next) {
+        const { filename } = ctx.params 
+        const fileInfo = await getPictureByFilename(filename)
+       
+        ctx.response.set('content-type', fileInfo.mimetype)
+        ctx.body = fs.createReadStream(`./uploads/picture/${filename}`)
     }
 }
 

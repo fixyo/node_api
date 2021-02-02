@@ -15,6 +15,14 @@ class UserService {
 
         return result[0]
     }
+
+    async updateUserAvatarUrl(path, user_id) {
+        const sql =  `UPDATE users SET avatar_url = ? WHERE id = ?;`
+
+        const [result] = await db.execute(sql, [path, user_id])
+
+        return result 
+    }
 }
 
 module.exports = new UserService()
